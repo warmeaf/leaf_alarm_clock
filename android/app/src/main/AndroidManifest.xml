@@ -3,7 +3,7 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <application
-        android:label="leaf_alarm_clock"
+        android:label="叶子闹钟"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
