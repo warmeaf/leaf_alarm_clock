@@ -135,7 +135,7 @@ class HomeView extends GetView<HomeController> {
                         // Text('小时'),
                         _buildNumberPicker(
                           value: controller.pickerData['minute']!.value,
-                          minValue: 5,
+                          minValue: 0,
                           maxValue: 59,
                           onChanged: (value) {
                             controller.pickerData['minute']!.value = value;
@@ -163,7 +163,7 @@ class HomeView extends GetView<HomeController> {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           Text(
-            '长按可编辑',
+            '创建指定时间段之后的闹钟，长按可编辑',
             style: Theme.of(context)
                 .textTheme
                 .labelMedium!
@@ -202,6 +202,13 @@ class HomeView extends GetView<HomeController> {
             '桌面快捷方式创建',
             style: Theme.of(context).textTheme.titleLarge,
           ),
+          Text(
+            '创建指定时间段之后响铃的桌面快捷图标',
+            style: Theme.of(context)
+                .textTheme
+                .labelMedium!
+                .copyWith(color: Colors.grey),
+          ),
         ]),
       ),
       Row(
@@ -227,10 +234,10 @@ class HomeView extends GetView<HomeController> {
                           ),
                     ),
                   )),
-              Text(
-                '之后响铃的桌面快捷图标',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              // Text(
+              //   '之后响铃的桌面快捷图标',
+              //   style: Theme.of(context).textTheme.bodyMedium,
+              // ),
             ],
           ),
           FilledButton(

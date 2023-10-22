@@ -28,16 +28,16 @@ class HomeController extends GetxController {
               DateTime.now().day, 1, 0)
           .obs
     },
-    {
-      'time': DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day, 7, 0)
-          .obs
-    },
-    {
-      'time': DateTime(DateTime.now().year, DateTime.now().month,
-              DateTime.now().day, 8, 0)
-          .obs
-    },
+    // {
+    //   'time': DateTime(DateTime.now().year, DateTime.now().month,
+    //           DateTime.now().day, 7, 0)
+    //       .obs
+    // },
+    // {
+    //   'time': DateTime(DateTime.now().year, DateTime.now().month,
+    //           DateTime.now().day, 8, 0)
+    //       .obs
+    // },
   ];
 
   // datePick数据
