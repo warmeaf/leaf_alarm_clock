@@ -25,7 +25,7 @@ class FixedShortcutHelper(private val context: Context) {
                 val shortcut = ShortcutInfo.Builder(context, timeText)
                     .setShortLabel(timeText)
                     .setLongLabel("${timeText}后响铃")
-                    .setIcon(Icon.createWithResource(context, R.mipmap.ic_short_launcher))
+                    .setIcon(Icon.createWithResource(context, R.mipmap.ic_launcher))
                     .setIntent(shortcutIntent)
                     .build()
 

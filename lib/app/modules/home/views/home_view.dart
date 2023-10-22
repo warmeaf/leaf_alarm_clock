@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:material_symbols_icons/symbols.dart';
 // import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import '../controllers/home_controller.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -156,11 +157,16 @@ class HomeView extends GetView<HomeController> {
   List<Widget> _quickCreation(BuildContext context) {
     return [
       Padding(
-        padding: const EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.only(bottom: 10),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            '快捷创建',
-            style: Theme.of(context).textTheme.titleLarge,
+          Row(
+            children: [
+              Text(
+                '快捷创建',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const Icon(Symbols.bolt_rounded),
+            ],
           ),
           Text(
             '创建指定时间段之后的闹钟，长按可编辑',
@@ -196,11 +202,16 @@ class HomeView extends GetView<HomeController> {
   List<Widget> _fixedShortcutCreation(BuildContext context) {
     return [
       Padding(
-        padding: const EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.only(bottom: 10),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            '桌面快捷方式创建',
-            style: Theme.of(context).textTheme.titleLarge,
+          Row(
+            children: [
+              Text(
+                '桌面快捷图标创建',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const Icon(Symbols.app_shortcut_rounded),
+            ],
           ),
           Text(
             '创建指定时间段之后响铃的桌面快捷图标',
@@ -269,7 +280,7 @@ class HomeView extends GetView<HomeController> {
             children: <Widget>[
               ..._quickCreation(context),
               const SizedBox(
-                height: 40,
+                height: 50,
               ),
               ..._fixedShortcutCreation(context)
             ],
