@@ -65,7 +65,7 @@ class HomeController extends GetxController {
               DateTime.now().day, 8, 0)
           .obs
     },
-  ].obs;
+  ];
 
   // 上拉栏数据
   final Map<String, RxInt> pickerData = {'hour': 0.obs, 'minute': 0.obs};
