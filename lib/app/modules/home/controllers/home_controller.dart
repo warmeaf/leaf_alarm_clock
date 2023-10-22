@@ -4,6 +4,23 @@ import 'package:flutter/services.dart';
 class HomeController extends GetxController {
   MethodChannel platform = const MethodChannel('com.leaf.alarm_channel');
 
+  Future<void> receiveDataFromNative(Function sucess, Function error) async {
+    try {
+      print('运行');
+      // 调用与原生代码对应的方法名，获取数据
+      platform.setMethodCallHandler((call) async {
+        if (call.method == 'shortcut_result') {
+          final data = call.arguments;
+          if (data == 'success') {
+            sucess();
+          } else {
+            error();
+          }
+        }
+      });
+    } catch (e) {}
+  }
+
   // 创建闹钟
   Future<void> setAlarm({int hour = 0, int minute = 30}) async {
     try {

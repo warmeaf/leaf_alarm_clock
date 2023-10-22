@@ -252,8 +252,8 @@ class HomeView extends GetView<HomeController> {
           ),
           FilledButton(
             onPressed: () {
-              const snackBar = SnackBar(content: Text('桌面快捷图标已创建！'));
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              // const snackBar = SnackBar(content: Text('桌面快捷图标已创建！'));
+              // ScaffoldMessenger.of(context).showSnackBar(snackBar);
               controller.createFixedShortcut();
             },
             child: const Text('创建'),
@@ -265,6 +265,13 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.receiveDataFromNative(() {
+      const snackBar = SnackBar(content: Text('桌面快捷图标已创建！'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }, () {
+      const snackBar = SnackBar(content: Text('创建失败，请检查权限设置！'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    });
     return Scaffold(
         appBar: AppBar(
           title: Padding(

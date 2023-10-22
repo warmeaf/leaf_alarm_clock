@@ -14,7 +14,8 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+        val channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        channel.setMethodCallHandler { call, result ->
             if (call.method == "setAlarm") {
                 val alarmTimeInMillis = call.arguments as Long
                 setAlarm(alarmTimeInMillis)
@@ -26,7 +27,7 @@ class MainActivity : FlutterActivity() {
                 var hour = call.argument<Int>("hour")!!
                 var minute = call.argument<Int>("minute")!!
                 val fixedShortcutHelper = FixedShortcutHelper(this)
-                fixedShortcutHelper.createFixedShortcut(timeText, hour, minute)
+                fixedShortcutHelper.createFixedShortcut(timeText, hour, minute, channel)
                 result.success(null)
             } else {
                 result.notImplemented()
