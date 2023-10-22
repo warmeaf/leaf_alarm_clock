@@ -4,45 +4,6 @@ import 'package:flutter/services.dart';
 class HomeController extends GetxController {
   MethodChannel platform = const MethodChannel('com.leaf.alarm_channel');
 
-  RxInt selectedHour = 0.obs;
-  RxInt selectedMinute = 0.obs;
-
-  // 闹钟时间间隔
-  final duration = const Duration(minutes: 30).obs;
-  // 设置闹钟的时间
-  void setDuration(Duration value) {
-    duration.value = value;
-  }
-
-  String get durationText {
-    var minutes = duration.value.inMinutes;
-    var hours = duration.value.inHours;
-    if (minutes < 60) {
-      return '${duration.value.inMinutes.toString()}分钟';
-    } else if (minutes % 60 == 0) {
-      return '${hours.toString()}小时';
-    } else {
-      var residueMinutes = minutes - (hours * 60);
-      return '${hours.toString()}小时${residueMinutes.toString()}分钟';
-    }
-  }
-
-  // // 创建闹钟
-  // Future<void> setAlarm({Duration? durationQuick}) async {
-  //   try {
-  //     DateTime alarmTime;
-  //     if (durationQuick != null) {
-  //       alarmTime = DateTime.now().add(durationQuick);
-  //     } else {
-  //       alarmTime = DateTime.now().add(duration.value);
-  //     }
-  //     // print(duration.value);
-  //     await platform.invokeMethod('setAlarm', alarmTime.millisecondsSinceEpoch);
-  //   } catch (error) {
-  //     // print("Error: '${e.message}'.");
-  //   }
-  // }
-
   // 创建闹钟
   Future<void> setAlarm({int hour = 0, int minute = 30}) async {
     try {
@@ -79,17 +40,15 @@ class HomeController extends GetxController {
     },
   ];
 
-  // 上拉栏数据
+  // datePick数据
   final Map<String, RxInt> pickerData = {'hour': 0.obs, 'minute': 0.obs};
 
+  // 桌面快捷方式数据
   final fixedShortcutCurrentTime = DateTime(
           DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 30)
       .obs;
-  void setFixedShortcutCurrentTime(int hour, int minute) {
-    fixedShortcutCurrentTime.value = DateTime(DateTime.now().year,
-        DateTime.now().month, DateTime.now().day, hour, minute);
-  }
 
+  // 获取格式化时间
   String get fixedShortcutCurrentTimeText {
     var hour = fixedShortcutCurrentTime.value.hour;
     var minute = fixedShortcutCurrentTime.value.minute;
@@ -128,7 +87,8 @@ class HomeController extends GetxController {
         'hour': fixedShortcutCurrentTime.value.hour,
         'minute': fixedShortcutCurrentTime.value.minute
       });
-    } on PlatformException catch (error) {
+    } catch (error) {
+      // 这里加个提示
       // print("Error: '${e.message}'.");
     }
   }

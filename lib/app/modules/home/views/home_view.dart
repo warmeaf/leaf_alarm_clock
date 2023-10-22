@@ -28,6 +28,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  // 显示小时和分钟底部弹窗（快捷创建）
   void _showPicker(BuildContext context, int index) {
     controller.pickerData['hour']!.value =
         controller.quickList[index]['time']!.value.hour;
@@ -74,6 +75,67 @@ class HomeView extends GetView<HomeController> {
                         _buildNumberPicker(
                           value: controller.pickerData['minute']!.value,
                           minValue: 0,
+                          maxValue: 59,
+                          onChanged: (value) {
+                            controller.pickerData['minute']!.value = value;
+                          },
+                        ),
+                        // Text('分钟'),
+                      ],
+                    ),
+                  )),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // 显示小时和分钟底部弹窗（桌面快捷图标创建）
+  void _showPicker02(BuildContext context, DateTime date) {
+    controller.pickerData['hour']!.value = date.hour;
+    controller.pickerData['minute']!.value = date.minute;
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return SizedBox(
+          height: 240,
+          child: Column(
+            children: <Widget>[
+              ListTile(
+                title: const Text('选择小时和分钟'),
+                trailing: TextButton(
+                  onPressed: () {
+                    controller.fixedShortcutCurrentTime.value = DateTime(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        controller.pickerData['hour']!.value,
+                        controller.pickerData['minute']!.value);
+                    // 这里可以处理用户点击“确定”按钮后的逻辑
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('确定'),
+                ),
+              ),
+              Obx(() => Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        _buildNumberPicker(
+                          value: controller.pickerData['hour']!.value,
+                          minValue: 0,
+                          maxValue: 12,
+                          onChanged: (value) {
+                            // 这里最好做防抖处理
+                            // print(value);
+                            controller.pickerData['hour']!.value = value;
+                          },
+                        ),
+                        // Text('小时'),
+                        _buildNumberPicker(
+                          value: controller.pickerData['minute']!.value,
+                          minValue: 5,
                           maxValue: 59,
                           onChanged: (value) {
                             controller.pickerData['minute']!.value = value;
@@ -150,8 +212,10 @@ class HomeView extends GetView<HomeController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Obx(() => InkWell(
-                    // onTap: () {
-                    // },
+                    onTap: () {
+                      _showPicker02(
+                          context, controller.fixedShortcutCurrentTime.value);
+                    },
                     child: Text(
                       controller.fixedShortcutCurrentTimeText,
                       style: Theme.of(context).textTheme.bodyLarge!.copyWith(
