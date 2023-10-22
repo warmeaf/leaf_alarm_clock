@@ -291,7 +291,7 @@ class HomeView extends GetView<HomeController> {
             children: [
               Icon(Symbols.error, size: 20, color: Colors.red),
               SizedBox(width: 4),
-              Text('创建失败，请检查相关权限！')
+              Text('创建失败，请开启相关权限！')
             ],
           ),
           showCloseIcon: true);
