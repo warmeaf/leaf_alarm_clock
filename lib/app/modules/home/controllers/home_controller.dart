@@ -6,7 +6,7 @@ class HomeController extends GetxController {
 
   RxInt selectedHour = 0.obs;
   RxInt selectedMinute = 0.obs;
-  
+
   // 闹钟时间间隔
   final duration = const Duration(minutes: 30).obs;
   // 设置闹钟的时间
@@ -27,7 +27,7 @@ class HomeController extends GetxController {
     }
   }
 
-  // 设置闹钟（自定义）
+  // 快捷创建列表数据
   Future<void> setAlarm({Duration? durationQuick}) async {
     try {
       DateTime alarmTime;
@@ -43,6 +43,7 @@ class HomeController extends GetxController {
     }
   }
 
+  // 快捷创建列表数据
   final List<Map<String, Rx<DateTime>>> quickList = [
     {
       'time': DateTime(DateTime.now().year, DateTime.now().month,
@@ -65,6 +66,9 @@ class HomeController extends GetxController {
           .obs
     },
   ].obs;
+
+  // 上拉栏数据
+  final Map<String, RxInt> pickerData = {'hour': 0.obs, 'minute': 0.obs};
 
   final fixedShortcutCurrentTime = DateTime(
           DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 30)
