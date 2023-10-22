@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
-// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import '../controllers/home_controller.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:get/get.dart';
+import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
@@ -253,6 +252,8 @@ class HomeView extends GetView<HomeController> {
           ),
           FilledButton(
             onPressed: () {
+              const snackBar = SnackBar(content: Text('桌面快捷图标已创建！'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
               controller.createFixedShortcut();
             },
             child: const Text('创建'),

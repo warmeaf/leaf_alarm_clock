@@ -11,8 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.18.0
-  duration_picker: ^1.1.1
-  flutter_datetime_picker: ^1.5.1
   numberpicker: ^2.1.2
   material_symbols_icons: ^4.2671.0
 
