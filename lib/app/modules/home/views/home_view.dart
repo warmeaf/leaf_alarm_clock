@@ -250,14 +250,21 @@ class HomeView extends GetView<HomeController> {
               // ),
             ],
           ),
-          FilledButton(
-            onPressed: () {
-              // const snackBar = SnackBar(content: Text('桌面快捷图标已创建！'));
-              // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              controller.createFixedShortcut();
-            },
-            child: const Text('创建'),
-          ),
+          Obx(() => FilledButton(
+              onPressed: () {
+                if (controller.isCreatingFixedShortcut.value) return;
+                controller.createFixedShortcut();
+              },
+              child: controller.isCreatingFixedShortcut.value
+                  ? const SizedBox(
+                      width: 20.0,
+                      height: 20.0,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.0,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Text('创建'))),
         ],
       ),
     ];
@@ -266,10 +273,28 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     controller.receiveDataFromNative(() {
-      const snackBar = SnackBar(content: Text('桌面快捷图标已创建！'));
+      controller.isCreatingFixedShortcut.value = false;
+      const snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Symbols.check_circle, size: 20, color: Colors.green),
+              SizedBox(width: 4),
+              Text('创建成功！')
+            ],
+          ),
+          showCloseIcon: true);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }, () {
-      const snackBar = SnackBar(content: Text('创建失败，请检查权限设置！'));
+      controller.isCreatingFixedShortcut.value = false;
+      const snackBar = SnackBar(
+          content: Row(
+            children: [
+              Icon(Symbols.error, size: 20, color: Colors.red),
+              SizedBox(width: 4),
+              Text('创建失败，请检查相关权限！')
+            ],
+          ),
+          showCloseIcon: true);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
     return Scaffold(

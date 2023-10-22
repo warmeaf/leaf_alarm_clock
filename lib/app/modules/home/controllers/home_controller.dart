@@ -96,9 +96,13 @@ class HomeController extends GetxController {
     return timeText;
   }
 
+  // 是否正在创建快捷方式
+  final RxBool isCreatingFixedShortcut = false.obs;
+
   // 创建快捷图标
   createFixedShortcut() async {
     try {
+      isCreatingFixedShortcut.value = true;
       await platform.invokeMethod('createFixedShortcut', {
         'timeText': fixedShortcutCurrentTimeText,
         'hour': fixedShortcutCurrentTime.value.hour,
