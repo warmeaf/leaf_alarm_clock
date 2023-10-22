@@ -113,7 +113,12 @@ class HomeView extends GetView<HomeController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: controller.quickList.asMap().entries.map((entry) {
               return OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  controller.setAlarm(
+                      hour: controller.quickList[entry.key]['time']!.value.hour,
+                      minute: controller
+                          .quickList[entry.key]['time']!.value.minute);
+                },
                 onLongPress: () {
                   _showPicker(context, entry.key);
                 },

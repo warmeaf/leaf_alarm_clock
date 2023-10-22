@@ -27,18 +27,30 @@ class HomeController extends GetxController {
     }
   }
 
-  // 快捷创建列表数据
-  Future<void> setAlarm({Duration? durationQuick}) async {
+  // // 创建闹钟
+  // Future<void> setAlarm({Duration? durationQuick}) async {
+  //   try {
+  //     DateTime alarmTime;
+  //     if (durationQuick != null) {
+  //       alarmTime = DateTime.now().add(durationQuick);
+  //     } else {
+  //       alarmTime = DateTime.now().add(duration.value);
+  //     }
+  //     // print(duration.value);
+  //     await platform.invokeMethod('setAlarm', alarmTime.millisecondsSinceEpoch);
+  //   } catch (error) {
+  //     // print("Error: '${e.message}'.");
+  //   }
+  // }
+
+  // 创建闹钟
+  Future<void> setAlarm({int hour = 0, int minute = 30}) async {
     try {
-      DateTime alarmTime;
-      if (durationQuick != null) {
-        alarmTime = DateTime.now().add(durationQuick);
-      } else {
-        alarmTime = DateTime.now().add(duration.value);
-      }
-      // print(duration.value);
+      final duration = Duration(hours: hour, minutes: minute + 1);
+      final alarmTime = DateTime.now().add(duration);
       await platform.invokeMethod('setAlarm', alarmTime.millisecondsSinceEpoch);
-    } on PlatformException catch (error) {
+    } catch (error) {
+      // 这里加个失败的提示
       // print("Error: '${e.message}'.");
     }
   }
