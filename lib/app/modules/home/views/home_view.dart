@@ -161,14 +161,14 @@ class HomeView extends GetView<HomeController> {
           Row(
             children: [
               Text(
-                '快捷创建',
+                '创建闹钟',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const Icon(Symbols.bolt_rounded),
             ],
           ),
           Text(
-            '创建指定时间段之后的闹钟，长按可编辑',
+            '长按可编辑',
             style: Theme.of(context)
                 .textTheme
                 .labelMedium!
@@ -206,14 +206,14 @@ class HomeView extends GetView<HomeController> {
           Row(
             children: [
               Text(
-                '桌面快捷图标创建',
+                '创建桌面快捷图标',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const Icon(Symbols.app_shortcut_rounded),
             ],
           ),
           Text(
-            '创建指定时间段之后响铃的桌面快捷图标',
+            '',
             style: Theme.of(context)
                 .textTheme
                 .labelMedium!
@@ -313,7 +313,7 @@ class HomeView extends GetView<HomeController> {
             children: <Widget>[
               ..._quickCreation(context),
               const SizedBox(
-                height: 50,
+                height: 80,
               ),
               ..._fixedShortcutCreation(context)
             ],
