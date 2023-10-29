@@ -45,13 +45,7 @@ class HomeView extends GetView<HomeController> {
                 title: const Text('选择小时和分钟'),
                 trailing: TextButton(
                   onPressed: () {
-                    controller.quickList[index]['time']!.value = DateTime(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day,
-                        controller.pickerData['hour']!.value,
-                        controller.pickerData['minute']!.value);
-                    // 这里可以处理用户点击“确定”按钮后的逻辑
+                    controller.handleChangeList(index);
                     Navigator.of(context).pop();
                   },
                   child: const Text('确定'),
@@ -106,12 +100,7 @@ class HomeView extends GetView<HomeController> {
                 title: const Text('选择小时和分钟'),
                 trailing: TextButton(
                   onPressed: () {
-                    controller.fixedShortcutCurrentTime.value = DateTime(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day,
-                        controller.pickerData['hour']!.value,
-                        controller.pickerData['minute']!.value);
+                    controller.handleChangeFixedShortcutCurrentTime();
                     // 这里可以处理用户点击“确定”按钮后的逻辑
                     Navigator.of(context).pop();
                   },
@@ -272,6 +261,9 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.resetQuickList();
+    controller.resetFixedShortcutCurrentTime();
+
     controller.receiveDataFromNative(() {
       controller.isCreatingFixedShortcut.value = false;
       const snackBar = SnackBar(
@@ -297,6 +289,7 @@ class HomeView extends GetView<HomeController> {
           showCloseIcon: true);
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     });
+
     return Scaffold(
         appBar: AppBar(
           title: Padding(

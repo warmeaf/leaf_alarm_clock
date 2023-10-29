@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeController extends GetxController {
   MethodChannel platform = const MethodChannel('com.leaf.alarm_channel');
 
   Future<void> receiveDataFromNative(Function sucess, Function error) async {
     try {
-      print('运行');
       // 调用与原生代码对应的方法名，获取数据
       platform.setMethodCallHandler((call) async {
         if (call.method == 'shortcut_result') {
@@ -45,17 +45,36 @@ class HomeController extends GetxController {
               DateTime.now().day, 1, 0)
           .obs
     },
-    // {
-    //   'time': DateTime(DateTime.now().year, DateTime.now().month,
-    //           DateTime.now().day, 7, 0)
-    //       .obs
-    // },
-    // {
-    //   'time': DateTime(DateTime.now().year, DateTime.now().month,
-    //           DateTime.now().day, 8, 0)
-    //       .obs
-    // },
   ];
+  resetQuickList() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    quickList.asMap().forEach((index, element) {
+      final list = prefs.getStringList('quickList$index');
+      if (list != null) {
+        var hour = int.parse(list[0]);
+        var minute = int.parse(list[1]);
+
+        element['time']!.value = DateTime(DateTime.now().year,
+            DateTime.now().month, DateTime.now().day, hour, minute);
+      }
+    });
+  }
+
+  handleChangeList(int index) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    quickList[index]['time']!.value = DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+        pickerData['hour']!.value,
+        pickerData['minute']!.value);
+
+    await prefs.setStringList('quickList$index', <String>[
+      pickerData['hour']!.value.toString(),
+      pickerData['minute']!.value.toString()
+    ]);
+  }
 
   // datePick数据
   final Map<String, RxInt> pickerData = {'hour': 0.obs, 'minute': 0.obs};
@@ -64,6 +83,32 @@ class HomeController extends GetxController {
   final fixedShortcutCurrentTime = DateTime(
           DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 30)
       .obs;
+  resetFixedShortcutCurrentTime() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final list = prefs.getStringList('fixedShortcutCurrentTime');
+    if (list != null) {
+      var hour = int.parse(list[0]);
+      var minute = int.parse(list[1]);
+      fixedShortcutCurrentTime.value = DateTime(DateTime.now().year,
+          DateTime.now().month, DateTime.now().day, hour, minute);
+    }
+  }
+
+  handleChangeFixedShortcutCurrentTime() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    fixedShortcutCurrentTime.value = DateTime(
+        DateTime.now().year,
+        DateTime.now().month,
+        DateTime.now().day,
+        pickerData['hour']!.value,
+        pickerData['minute']!.value);
+
+    prefs.setStringList('fixedShortcutCurrentTime', <String>[
+      pickerData['hour']!.value.toString(),
+      pickerData['minute']!.toString()
+    ]);
+  }
 
   // 获取格式化时间
   String get fixedShortcutCurrentTimeText {
