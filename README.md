@@ -6,4 +6,4 @@
 
 ### 应用界面
 
-![应用界面](./assets/home.jpg){width="300px"}
+<img src="./assets/home.jpg" alt="应用界面" width="300">
