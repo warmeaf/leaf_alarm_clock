@@ -28,119 +28,6 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  // 显示小时和分钟底部弹窗（快捷创建）
-  void _showPicker(BuildContext context, int index) {
-    controller.pickerData['hour']!.value =
-        controller.quickList[index]['time']!.value.hour;
-    controller.pickerData['minute']!.value =
-        controller.quickList[index]['time']!.value.minute;
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return SizedBox(
-          height: 240,
-          child: Column(
-            children: <Widget>[
-              ListTile(
-                title: const Text('选择小时和分钟'),
-                trailing: TextButton(
-                  onPressed: () {
-                    controller.handleChangeList(index);
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('确定'),
-                ),
-              ),
-              Obx(() => Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        _buildNumberPicker(
-                          value: controller.pickerData['hour']!.value,
-                          minValue: 0,
-                          maxValue: 12,
-                          onChanged: (value) {
-                            // 这里最好做防抖处理
-                            // print(value);
-                            controller.pickerData['hour']!.value = value;
-                          },
-                        ),
-                        // Text('小时'),
-                        _buildNumberPicker(
-                          value: controller.pickerData['minute']!.value,
-                          minValue: 0,
-                          maxValue: 59,
-                          onChanged: (value) {
-                            controller.pickerData['minute']!.value = value;
-                          },
-                        ),
-                        // Text('分钟'),
-                      ],
-                    ),
-                  )),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // 显示小时和分钟底部弹窗（桌面快捷图标创建）
-  void _showPicker02(BuildContext context, DateTime date) {
-    controller.pickerData['hour']!.value = date.hour;
-    controller.pickerData['minute']!.value = date.minute;
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext builder) {
-        return SizedBox(
-          height: 240,
-          child: Column(
-            children: <Widget>[
-              ListTile(
-                title: const Text('选择小时和分钟'),
-                trailing: TextButton(
-                  onPressed: () {
-                    controller.handleChangeFixedShortcutCurrentTime();
-                    // 这里可以处理用户点击“确定”按钮后的逻辑
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('确定'),
-                ),
-              ),
-              Obx(() => Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        _buildNumberPicker(
-                          value: controller.pickerData['hour']!.value,
-                          minValue: 0,
-                          maxValue: 12,
-                          onChanged: (value) {
-                            // 这里最好做防抖处理
-                            // print(value);
-                            controller.pickerData['hour']!.value = value;
-                          },
-                        ),
-                        // Text('小时'),
-                        _buildNumberPicker(
-                          value: controller.pickerData['minute']!.value,
-                          minValue: 0,
-                          maxValue: 59,
-                          onChanged: (value) {
-                            controller.pickerData['minute']!.value = value;
-                          },
-                        ),
-                        // Text('分钟'),
-                      ],
-                    ),
-                  )),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   // 快捷创建
   List<Widget> _quickCreation(BuildContext context) {
     return [
@@ -156,32 +43,53 @@ class HomeView extends GetView<HomeController> {
               const Icon(Symbols.bolt_rounded),
             ],
           ),
-          Text(
-            '长按可编辑',
-            style: Theme.of(context)
-                .textTheme
-                .labelMedium!
-                .copyWith(color: Colors.grey),
-          ),
         ]),
       ),
       Obx(() => Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: controller.quickList.asMap().entries.map((entry) {
-              return OutlinedButton(
-                onPressed: () {
-                  controller.setAlarm(
-                      hour: controller.quickList[entry.key]['time']!.value.hour,
-                      minute: controller
-                          .quickList[entry.key]['time']!.value.minute);
-                },
-                onLongPress: () {
-                  _showPicker(context, entry.key);
-                },
-                child: Text(controller.timeToText(
-                    controller.quickList[entry.key]['time']!.value)),
-              );
-            }).toList(),
+            children: [
+              Row(
+                children: [
+                  _buildNumberPicker(
+                    value: controller.pickerDataRoutine['hour']!.value,
+                    minValue: 0,
+                    maxValue: 12,
+                    onChanged: (value) {
+                      // 这里最好做防抖处理
+                      // print(value);
+                      controller.pickerDataRoutine['hour']!.value = value;
+                      controller.storeData('pickerDataRoutine', [
+                        controller.pickerDataRoutine['hour']!.value.toString(),
+                        controller.pickerDataRoutine['minute']!.value
+                            .toString(),
+                      ]);
+                    },
+                  ),
+                  const Text('小时'),
+                  _buildNumberPicker(
+                    value: controller.pickerDataRoutine['minute']!.value,
+                    minValue: 0,
+                    maxValue: 59,
+                    onChanged: (value) {
+                      controller.pickerDataRoutine['minute']!.value = value;
+                      controller.storeData('pickerDataRoutine', [
+                        controller.pickerDataRoutine['hour']!.value.toString(),
+                        controller.pickerDataRoutine['minute']!.value
+                            .toString(),
+                      ]);
+                    },
+                  ),
+                  const Text('分钟'),
+                ],
+              ),
+              FilledButton(
+                  onPressed: () {
+                    controller.setAlarm(
+                        hour: controller.pickerDataRoutine['hour']!.value,
+                        minute: controller.pickerDataRoutine['minute']!.value);
+                  },
+                  child: const Text('创建'))
+            ],
           )),
     ];
   }
@@ -210,59 +118,67 @@ class HomeView extends GetView<HomeController> {
           ),
         ]),
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(() => InkWell(
-                    onTap: () {
-                      _showPicker02(
-                          context, controller.fixedShortcutCurrentTime.value);
-                    },
-                    child: Text(
-                      controller.fixedShortcutCurrentTimeText,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            decorationColor: Theme.of(context).primaryColor,
-                            decorationThickness: 2.0,
-                          ),
-                    ),
-                  )),
-              // Text(
-              //   '之后响铃的桌面快捷图标',
-              //   style: Theme.of(context).textTheme.bodyMedium,
-              // ),
-            ],
-          ),
-          Obx(() => FilledButton(
-              onPressed: () {
-                if (controller.isCreatingFixedShortcut.value) return;
-                controller.createFixedShortcut();
-              },
-              child: controller.isCreatingFixedShortcut.value
-                  ? const SizedBox(
-                      width: 20.0,
-                      height: 20.0,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.0,
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Text('创建'))),
-        ],
-      ),
+      Obx(
+        () => Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                _buildNumberPicker(
+                  value: controller.pickerDataShortcut['hour']!.value,
+                  minValue: 0,
+                  maxValue: 12,
+                  onChanged: (value) {
+                    // 这里最好做防抖处理
+                    // print(value);
+                    controller.pickerDataShortcut['hour']!.value = value;
+                    controller.storeData('pickerDataShortcut', [
+                      controller.pickerDataShortcut['hour']!.value.toString(),
+                      controller.pickerDataShortcut['minute']!.value.toString(),
+                    ]);
+                  },
+                ),
+                const Text('小时'),
+                _buildNumberPicker(
+                  value: controller.pickerDataShortcut['minute']!.value,
+                  minValue: 0,
+                  maxValue: 59,
+                  onChanged: (value) {
+                    controller.pickerDataShortcut['minute']!.value = value;
+                    controller.storeData('pickerDataShortcut', [
+                      controller.pickerDataShortcut['hour']!.value.toString(),
+                      controller.pickerDataShortcut['minute']!.value.toString(),
+                    ]);
+                  },
+                ),
+                const Text('分钟'),
+              ],
+            ),
+            FilledButton(
+                onPressed: () {
+                  if (controller.isCreatingFixedShortcut.value) return;
+                  controller.createFixedShortcut();
+                },
+                child: controller.isCreatingFixedShortcut.value
+                    ? const SizedBox(
+                        width: 20.0,
+                        height: 20.0,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.0,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Text('创建')),
+          ],
+        ),
+      )
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    controller.resetQuickList();
-    controller.resetFixedShortcutCurrentTime();
+    controller.resetData('pickerDataRoutine');
+    controller.resetData('pickerDataShortcut');
 
     controller.receiveDataFromNative(() {
       controller.isCreatingFixedShortcut.value = false;
