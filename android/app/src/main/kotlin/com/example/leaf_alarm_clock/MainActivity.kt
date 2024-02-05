@@ -78,9 +78,9 @@ class MainActivity : FlutterActivity() {
         }
         startActivity(intent)
 
-        if(isClose) {
-            closeApp()
-        }
+        // if(isClose) {
+        //     closeApp()
+        // }
     }
 
     // 关闭应用
