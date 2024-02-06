@@ -6,4 +6,4 @@
 
 ### 应用界面
 
-<img src="./assets/home.jpg" alt="应用界面" width="300">
+<img src="./assets/home.png" alt="应用界面" width="300">
