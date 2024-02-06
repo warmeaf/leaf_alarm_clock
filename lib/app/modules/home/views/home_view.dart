@@ -61,8 +61,6 @@ class HomeView extends GetView<HomeController> {
                     minValue: 0,
                     maxValue: 12,
                     onChanged: (value) {
-                      // 这里最好做防抖处理
-                      // print(value);
                       controller.pickerDataRoutine['hour']!.value = value;
                       controller.storeData('pickerDataRoutine', [
                         controller.pickerDataRoutine['hour']!.value.toString(),
@@ -88,21 +86,11 @@ class HomeView extends GetView<HomeController> {
                   const Text('分钟'),
                 ],
               ),
-              OutlinedButton(
-                  onPressed: () {
-                    controller.setAlarm(
-                        hour: controller.pickerDataRoutine['hour']!.value,
-                        minute: controller.pickerDataRoutine['minute']!.value);
-                  },
-                  style: ButtonStyle(
-                    padding:
-                        MaterialStateProperty.resolveWith<EdgeInsetsGeometry>(
-                      (Set<MaterialState> states) {
-                        return const EdgeInsets.symmetric(horizontal: 8.0);
-                      },
-                    ),
-                  ),
-                  child: const Text('创建'))
+              _buildActionButtons(() {
+                controller.setAlarm(
+                    hour: controller.pickerDataRoutine['hour']!.value,
+                    minute: controller.pickerDataRoutine['minute']!.value);
+              }, const Text('创建')),
             ],
           )),
     ];
@@ -147,8 +135,6 @@ class HomeView extends GetView<HomeController> {
                   minValue: 0,
                   maxValue: 12,
                   onChanged: (value) {
-                    // 这里最好做防抖处理
-                    // print(value);
                     controller.pickerDataShortcut['hour']!.value = value;
                     controller.storeData('pickerDataShortcut', [
                       controller.pickerDataShortcut['hour']!.value.toString(),
@@ -172,20 +158,11 @@ class HomeView extends GetView<HomeController> {
                 const Text('分钟'),
               ],
             ),
-            OutlinedButton(
-                onPressed: () {
-                  if (controller.isCreatingFixedShortcut.value) return;
-                  controller.createFixedShortcut();
-                },
-                style: ButtonStyle(
-                  padding:
-                      MaterialStateProperty.resolveWith<EdgeInsetsGeometry>(
-                    (Set<MaterialState> states) {
-                      return const EdgeInsets.symmetric(horizontal: 8.0);
-                    },
-                  ),
-                ),
-                child: controller.isCreatingFixedShortcut.value
+            _buildActionButtons(() {
+              if (controller.isCreatingFixedShortcut.value) return;
+              controller.createFixedShortcut();
+            },
+                controller.isCreatingFixedShortcut.value
                     ? SizedBox(
                         width: 20.0,
                         height: 20.0,
@@ -199,6 +176,52 @@ class HomeView extends GetView<HomeController> {
         ),
       )
     ];
+  }
+
+  // 操作按钮
+  Widget _buildActionButtons(void Function() onPressed, Widget child) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: ButtonStyle(
+        padding: MaterialStateProperty.resolveWith<EdgeInsetsGeometry>(
+          (Set<MaterialState> states) {
+            return const EdgeInsets.symmetric(horizontal: 8.0);
+          },
+        ),
+      ),
+      child: child,
+    );
+  }
+
+  // 头部
+  Row _buildHeader(BuildContext context) {
+    return Row(children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 6, 10),
+        child: SvgPicture.asset(
+          'assets/logo.svg',
+          height: 16,
+          width: 16,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Text(
+          '叶子闹钟',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ),
+    ]);
+  }
+
+  // 卡片
+  Container _buildCard(BuildContext context, Widget containerChild) {
+    return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            color: Colors.lightGreen[100]),
+        child: containerChild);
   }
 
   @override
@@ -242,46 +265,23 @@ class HomeView extends GetView<HomeController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 6, 10),
-              child: SvgPicture.asset(
-                'assets/logo.svg',
-                height: 16,
-                width: 16,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                '叶子闹钟',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-          ]),
+          _buildHeader(context),
           const SizedBox(
             height: 20,
           ),
-          // ..._quickCreation(context),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.lightGreen[100]),
-            child: Column(children: [
-              ..._quickCreation(context),
-            ]),
-          ),
+          _buildCard(
+              context,
+              Column(children: [
+                ..._quickCreation(context),
+              ])),
           const SizedBox(
             height: 40,
           ),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.lightGreen[100]),
-            child: Column(children: [..._fixedShortcutCreation(context)]),
-          )
+          _buildCard(
+              context,
+              Column(children: [
+                ..._fixedShortcutCreation(context),
+              ])),
         ],
       ),
     ));
