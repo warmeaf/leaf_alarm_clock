@@ -17,7 +17,11 @@ void main() {
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: "叶子闹钟",
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.lightGreen,
+        ),
+      ),
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
     ),

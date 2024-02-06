@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:get/get.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
 
+  // 创建 Picker
   Widget _buildNumberPicker({
     int? value,
     int? minValue,
@@ -16,7 +18,7 @@ class HomeView extends GetView<HomeController> {
     return Column(
       children: <Widget>[
         SizedBox(
-          width: 60,
+          width: 50,
           child: NumberPicker(
             value: value ?? 0,
             minValue: minValue ?? 0,
@@ -28,7 +30,7 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  // 快捷创建
+  // 创建闹钟
   List<Widget> _quickCreation(BuildContext context) {
     return [
       Padding(
@@ -38,15 +40,19 @@ class HomeView extends GetView<HomeController> {
             children: [
               Text(
                 '创建闹钟',
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
-              const Icon(Symbols.bolt_rounded),
+              const Icon(
+                Symbols.bolt_rounded,
+                size: 16,
+              ),
             ],
           ),
         ]),
       ),
       Obx(() => Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Row(
                 children: [
@@ -82,19 +88,27 @@ class HomeView extends GetView<HomeController> {
                   const Text('分钟'),
                 ],
               ),
-              FilledButton(
+              OutlinedButton(
                   onPressed: () {
                     controller.setAlarm(
                         hour: controller.pickerDataRoutine['hour']!.value,
                         minute: controller.pickerDataRoutine['minute']!.value);
                   },
+                  style: ButtonStyle(
+                    padding:
+                        MaterialStateProperty.resolveWith<EdgeInsetsGeometry>(
+                      (Set<MaterialState> states) {
+                        return const EdgeInsets.symmetric(horizontal: 8.0);
+                      },
+                    ),
+                  ),
                   child: const Text('创建'))
             ],
           )),
     ];
   }
 
-  // 桌面快捷方式创建
+  // 创建桌面快捷方式
   List<Widget> _fixedShortcutCreation(BuildContext context) {
     return [
       Padding(
@@ -104,9 +118,12 @@ class HomeView extends GetView<HomeController> {
             children: [
               Text(
                 '创建桌面快捷图标',
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
-              const Icon(Symbols.app_shortcut_rounded),
+              const Icon(
+                Symbols.app_shortcut_rounded,
+                size: 16,
+              ),
             ],
           ),
           Text(
@@ -121,6 +138,7 @@ class HomeView extends GetView<HomeController> {
       Obx(
         () => Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Row(
               children: [
@@ -154,18 +172,26 @@ class HomeView extends GetView<HomeController> {
                 const Text('分钟'),
               ],
             ),
-            FilledButton(
+            OutlinedButton(
                 onPressed: () {
                   if (controller.isCreatingFixedShortcut.value) return;
                   controller.createFixedShortcut();
                 },
+                style: ButtonStyle(
+                  padding:
+                      MaterialStateProperty.resolveWith<EdgeInsetsGeometry>(
+                    (Set<MaterialState> states) {
+                      return const EdgeInsets.symmetric(horizontal: 8.0);
+                    },
+                  ),
+                ),
                 child: controller.isCreatingFixedShortcut.value
-                    ? const SizedBox(
+                    ? SizedBox(
                         width: 20.0,
                         height: 20.0,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.0,
-                          color: Colors.white,
+                          color: Colors.lightGreen.shade700,
                         ),
                       )
                     : const Text('创建')),
@@ -185,7 +211,7 @@ class HomeView extends GetView<HomeController> {
       const snackBar = SnackBar(
           content: Row(
             children: [
-              Icon(Symbols.check_circle, size: 20, color: Colors.green),
+              Icon(Symbols.check_circle, size: 20, color: Colors.lightGreen),
               SizedBox(width: 4),
               Text('创建成功！')
             ],
@@ -207,26 +233,57 @@ class HomeView extends GetView<HomeController> {
     });
 
     return Scaffold(
-        appBar: AppBar(
-          title: Padding(
-              padding: const EdgeInsets.only(left: 4),
+        body: SafeArea(
+      left: true,
+      top: true,
+      right: true,
+      bottom: true,
+      minimum: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 10, 6, 10),
+              child: SvgPicture.asset(
+                'assets/logo.svg',
+                height: 16,
+                width: 16,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: Text(
                 '叶子闹钟',
-                style: Theme.of(context).textTheme.titleMedium,
-              )),
-        ),
-        body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ..._quickCreation(context),
-              const SizedBox(
-                height: 80,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
-              ..._fixedShortcutCreation(context)
-            ],
+            ),
+          ]),
+          const SizedBox(
+            height: 20,
           ),
-        ));
+          // ..._quickCreation(context),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.lightGreen[100]),
+            child: Column(children: [
+              ..._quickCreation(context),
+            ]),
+          ),
+          const SizedBox(
+            height: 40,
+          ),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.lightGreen[100]),
+            child: Column(children: [..._fixedShortcutCreation(context)]),
+          )
+        ],
+      ),
+    ));
   }
 }
