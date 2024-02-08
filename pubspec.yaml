@@ -1,5 +1,5 @@
 name: leaf_alarm_clock
-version: 2.0.0
+version: 2.0.1
 publish_to: none
 description: 快速设置指定时间段之后的闹钟
 environment:
